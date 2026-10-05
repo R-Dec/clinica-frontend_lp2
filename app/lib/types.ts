@@ -11,3 +11,10 @@ export interface LoginResponse {
   apellido: string;
   token: string;
 }
+
+export interface Especialidad {
+  idEspecialidad: number;
+  nombre: string;
+  descripcion: string | null;
+  estado: boolean;
+}

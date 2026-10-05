@@ -2,10 +2,11 @@
 
 import {
   createContext,
+  ReactNode,
+  useCallback,
   useContext,
   useMemo,
   useSyncExternalStore,
-  ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
 import { loginRequest } from "../lib/api";
@@ -21,12 +22,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 const STORAGE_KEY = "clinica_session";
 
-// --- Suscripción a localStorage ---
 const listeners = new Set<() => void>();
 
 function subscribe(callback: () => void) {
   listeners.add(callback);
-  window.addEventListener("storage", callback); // cambios desde otras pestañas
+  window.addEventListener("storage", callback);
   return () => {
     listeners.delete(callback);
     window.removeEventListener("storage", callback);
@@ -34,7 +34,7 @@ function subscribe(callback: () => void) {
 }
 
 function notify() {
-  listeners.forEach((l) => l());
+  for (const l of listeners) l();
 }
 
 function getSnapshot() {
@@ -45,7 +45,6 @@ function getServerSnapshot() {
   return null;
 }
 
-// Indica si ya estamos en el cliente (false en servidor, true tras hidratar)
 const subscribeNoop = () => () => {};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -67,24 +66,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [raw]);
 
-  async function login(correo: string, password: string) {
-    const data = await loginRequest({ correo, password });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    notify();
-    router.push("/dashboard");
-  }
+  const login = useCallback(
+    async (correo: string, password: string) => {
+      const data = await loginRequest({ correo, password });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      notify();
+      router.push("/dashboard");
+    },
+    [router],
+  );
 
-  function logout() {
+  const logout = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     notify();
     router.push("/login");
-  }
+  }, [router]);
 
-  return (
-    <AuthContext.Provider value={{ user, loading: !hydrated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({ user, loading: !hydrated, login, logout }),
+    [user, hydrated, login, logout],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
