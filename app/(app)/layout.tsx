@@ -4,10 +4,10 @@ import Link from "next/link";
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
-import { useApi } from "../lib/useApi";
-import Sidebar from "../components/Sidebar";
-import { iniciales, itemsParaRol, NAV_ITEMS } from "../lib/navigation";
+import Sidebar from "@/components/layout/Sidebar";
+import { useAuth } from "@/features/auth/AuthContext";
+import { iniciales, itemsParaRol, NAV_ITEMS } from "@/lib/navigation";
+import { useApi } from "@/lib/useApi";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const { user, loading, logout } = useAuth();

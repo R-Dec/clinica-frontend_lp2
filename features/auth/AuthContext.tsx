@@ -9,8 +9,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import { useRouter } from "next/navigation";
-import { loginRequest } from "../lib/api";
-import { LoginResponse } from "../lib/types";
+import { iniciarSesion } from "./service";
+import type { LoginResponse } from "./types";
 
 interface AuthContextType {
   user: LoginResponse | null;
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (correo: string, password: string) => {
-      const data = await loginRequest({ correo, password });
+      const data = await iniciarSesion({ correo, password });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       notify();
       router.push("/dashboard");

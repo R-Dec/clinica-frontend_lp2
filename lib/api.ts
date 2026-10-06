@@ -1,6 +1,7 @@
-import { LoginRequest, LoginResponse } from "./types";
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+
+/** Tipo de la función que usan los servicios para llamar al backend. */
+export type ApiFn = <T>(path: string, options?: RequestInit) => Promise<T>;
 
 export class ApiError extends Error {
   status: number;
@@ -17,35 +18,22 @@ async function leerMensaje(res: Response, porDefecto: string): Promise<string> {
   return body && typeof body.mensaje === "string" ? body.mensaje : porDefecto;
 }
 
-export async function loginRequest(data: LoginRequest): Promise<LoginResponse> {
-  const res = await fetch(`${API_URL}/usuarios/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    throw new Error(await leerMensaje(res, "No se pudo iniciar sesión"));
-  }
-
-  return res.json();
-}
-
+/**
+ * Llamada base al backend. Con token agrega Authorization; sin token (login)
+ * se usa tal cual. El backend responde errores como { "mensaje": "..." }.
+ */
 export async function apiFetch<T>(
   path: string,
-  token: string,
+  token: string | null,
   options: RequestInit = {},
 ): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      ...(options.headers ?? {}),
-    },
-  });
+  const headers = new Headers(options.headers);
+  headers.set("Content-Type", "application/json");
+  if (token) headers.set("Authorization", `Bearer ${token}`);
 
-  if (res.status === 401) {
+  const res = await fetch(`${API_URL}${path}`, { ...options, headers });
+
+  if (res.status === 401 && token) {
     throw new ApiError(401, "Tu sesión expiró. Inicia sesión nuevamente.");
   }
   if (res.status === 403) {

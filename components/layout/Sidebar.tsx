@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Activity, LogOut } from "lucide-react";
-import { etiquetaRol, iniciales, NavItem } from "../lib/navigation";
-import { LoginResponse } from "../lib/types";
+import type { LoginResponse } from "@/features/auth/types";
+import { etiquetaRol, iniciales, type NavItem } from "@/lib/navigation";
 
 interface Props {
   items: NavItem[];

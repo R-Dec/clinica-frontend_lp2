@@ -2,7 +2,9 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../context/AuthContext";
+import Alerta from "@/components/ui/Alerta";
+import { useAuth } from "@/features/auth/AuthContext";
+import { mensajeDeError } from "@/lib/api";
 
 export default function LoginPage() {
   const { user, loading, login } = useAuth();
@@ -12,7 +14,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
 
-  // Si ya hay sesión, ir directo al dashboard
   useEffect(() => {
     if (!loading && user) router.replace("/dashboard");
   }, [user, loading, router]);
@@ -24,11 +25,7 @@ export default function LoginPage() {
     try {
       await login(correo, password);
     } catch (err) {
-      setError(
-        err instanceof TypeError
-          ? "No se pudo conectar con el servidor. ¿Está encendido el backend?"
-          : (err as Error).message,
-      );
+      setError(mensajeDeError(err));
     } finally {
       setEnviando(false);
     }
@@ -79,11 +76,7 @@ export default function LoginPage() {
           />
         </div>
 
-        {error && (
-          <p className="rounded-md bg-red-50 p-2 text-sm text-red-600">
-            {error}
-          </p>
-        )}
+        <Alerta mensaje={error} />
 
         <button
           type="submit"

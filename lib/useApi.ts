@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAuth } from "../context/AuthContext";
-import { ApiError, apiFetch } from "./api";
+import { useAuth } from "@/features/auth/AuthContext";
+import { type ApiFn, ApiError, apiFetch } from "./api";
 
-export function useApi() {
+/** Devuelve una función que ya incluye el token y cierra sesión si vence (401). */
+export function useApi(): ApiFn {
   const { user, logout } = useAuth();
   const token = user?.token;
 

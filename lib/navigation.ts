@@ -5,6 +5,7 @@ import {
   type LucideIcon,
   Settings,
   Stethoscope,
+  UserCog,
   Users,
 } from "lucide-react";
 
@@ -41,10 +42,16 @@ export const NAV_ITEMS: NavItem[] = [
     pendiente: true,
   },
   {
-    href: "/especialidades",
+    href: "/medicos",
     label: "Médicos & Especialidades",
     icon: Stethoscope,
     roles: [ROL_ADMIN, ROL_AGENTE],
+  },
+  {
+    href: "/empleados",
+    label: "Empleados",
+    icon: UserCog,
+    roles: [ROL_ADMIN],
   },
   {
     href: "/reportes",

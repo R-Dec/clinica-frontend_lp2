@@ -30,7 +30,7 @@ export default function Modal({ titulo, onClose, children }: Props) {
       <dialog
         open
         aria-labelledby="modal-titulo"
-        className="relative m-0 w-full max-w-md rounded-xl bg-white p-6 text-slate-900 shadow-xl"
+        className="relative m-0 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 text-slate-900 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 id="modal-titulo" className="text-lg font-bold">

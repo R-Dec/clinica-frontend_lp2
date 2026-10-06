@@ -1,4 +1,4 @@
-import PaginaPendiente from "../../components/PaginaPendiente";
+import PaginaPendiente from "@/components/ui/PaginaPendiente";
 
 export default function ConfiguracionPage() {
   return (

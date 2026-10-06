@@ -1,18 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { CheckCircle2, Clock, ShieldCheck, Stethoscope } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
-import { useApi } from "../../lib/useApi";
-import { mensajeDeError } from "../../lib/api";
-import { etiquetaRol } from "../../lib/navigation";
-import { Especialidad } from "../../lib/types";
+import { useCallback } from "react";
+import {
+  CheckCircle2,
+  Clock,
+  ShieldCheck,
+  Stethoscope,
+  UserRound,
+} from "lucide-react";
+import Alerta from "@/components/ui/Alerta";
+import { useAuth } from "@/features/auth/AuthContext";
+import { listarMedicos } from "@/features/empleados/service";
+import { listarEspecialidades } from "@/features/especialidades/service";
+import { etiquetaRol } from "@/lib/navigation";
+import { useApi } from "@/lib/useApi";
+import { useCarga } from "@/lib/useCarga";
 
 const MODULOS = [
   { nombre: "Inicio de sesión y roles", listo: true },
   { nombre: "Especialidades", listo: true },
+  { nombre: "Médicos y empleados", listo: true },
   { nombre: "Pacientes", listo: false },
-  { nombre: "Médicos y disponibilidad de horarios", listo: false },
+  { nombre: "Disponibilidad de horarios", listo: false },
   { nombre: "Citas", listo: false },
   { nombre: "Reportes", listo: false },
 ];
@@ -27,22 +36,16 @@ function saludo() {
 export default function DashboardPage() {
   const { user } = useAuth();
   const api = useApi();
-  const [activas, setActivas] = useState<number | null>(null);
-  const [error, setError] = useState("");
 
-  useEffect(() => {
-    let cancelado = false;
-    api<Especialidad[]>("/especialidades/activas")
-      .then((datos) => {
-        if (!cancelado) setActivas(datos.length);
-      })
-      .catch((e) => {
-        if (!cancelado) setError(mensajeDeError(e));
-      });
-    return () => {
-      cancelado = true;
-    };
+  const cargar = useCallback(async () => {
+    const [especialidades, medicos] = await Promise.all([
+      listarEspecialidades(api, true),
+      listarMedicos(api),
+    ]);
+    return { especialidades: especialidades.length, medicos: medicos.length };
   }, [api]);
+
+  const { datos, error } = useCarga(cargar);
 
   if (!user) return null;
 
@@ -58,15 +61,18 @@ export default function DashboardPage() {
         </p>
       </section>
 
-      {error && (
-        <p className="rounded-md bg-red-50 p-3 text-sm text-red-600">{error}</p>
-      )}
+      <Alerta mensaje={error} />
 
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-slate-200 bg-white p-5">
           <Stethoscope className="mb-3 text-sky-700" size={22} />
           <p className="text-sm text-slate-500">Especialidades activas</p>
-          <p className="text-3xl font-bold">{activas ?? "—"}</p>
+          <p className="text-3xl font-bold">{datos?.especialidades ?? "—"}</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <UserRound className="mb-3 text-sky-700" size={22} />
+          <p className="text-sm text-slate-500">Médicos activos</p>
+          <p className="text-3xl font-bold">{datos?.medicos ?? "—"}</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-5">
           <ShieldCheck className="mb-3 text-sky-700" size={22} />
