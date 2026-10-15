@@ -1,10 +1,5 @@
-import PaginaPendiente from "@/components/ui/PaginaPendiente";
+import ReportesPanel from "@/features/reportes/ReportesPanel";
 
 export default function ReportesPage() {
-  return (
-    <PaginaPendiente
-      titulo="Reportes"
-      descripcion="Se habilita cuando el backend publique el módulo de reportes."
-    />
-  );
+  return <ReportesPanel />;
 }

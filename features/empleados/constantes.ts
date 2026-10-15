@@ -3,8 +3,8 @@ export const CARGO_RECEPCIONISTA = "RECEPCIONISTA";
 
 /** Horarios definidos por el backend. */
 export const TURNOS = [
-  { valor: "DIURNO", etiqueta: "Diurno", horario: "08:00 – 20:00" },
-  { valor: "NOCTURNO", etiqueta: "Nocturno", horario: "20:00 – 08:00" },
+  { valor: "DIURNO", etiqueta: "Diurno", horario: "06:00 – 18:00" },
+  { valor: "NOCTURNO", etiqueta: "Nocturno", horario: "18:00 – 06:00" },
 ] as const;
 
 export function infoTurno(turno: string | null) {

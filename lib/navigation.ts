@@ -1,5 +1,6 @@
 import {
   CalendarPlus,
+  ClipboardList,
   FileBarChart,
   LayoutDashboard,
   type LucideIcon,
@@ -32,14 +33,18 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Agendar Cita",
     icon: CalendarPlus,
     roles: [ROL_ADMIN, ROL_AGENTE],
-    pendiente: true,
+  },
+  {
+    href: "/citas",
+    label: "Citas registradas",
+    icon: ClipboardList,
+    roles: [ROL_ADMIN, ROL_AGENTE],
   },
   {
     href: "/pacientes",
     label: "Pacientes",
     icon: Users,
     roles: [ROL_ADMIN, ROL_AGENTE],
-    pendiente: true,
   },
   {
     href: "/medicos",
@@ -47,25 +52,18 @@ export const NAV_ITEMS: NavItem[] = [
     icon: Stethoscope,
     roles: [ROL_ADMIN, ROL_AGENTE],
   },
-  {
-    href: "/empleados",
-    label: "Empleados",
-    icon: UserCog,
-    roles: [ROL_ADMIN],
-  },
+  { href: "/empleados", label: "Empleados", icon: UserCog, roles: [ROL_ADMIN] },
   {
     href: "/reportes",
     label: "Reportes",
     icon: FileBarChart,
     roles: [ROL_ADMIN],
-    pendiente: true,
   },
   {
     href: "/configuracion",
     label: "Configuración",
     icon: Settings,
     roles: [ROL_ADMIN],
-    pendiente: true,
   },
 ];
 

@@ -1,10 +1,10 @@
-import PaginaPendiente from "@/components/ui/PaginaPendiente";
+import { Suspense } from "react";
+import AgendarCita from "@/features/citas/AgendarCita";
 
 export default function AgendarCitaPage() {
   return (
-    <PaginaPendiente
-      titulo="Agendar cita"
-      descripcion="Flujo previsto: elegir paciente → especialidad → médico → horario disponible (calculado por el backend, citas de 45 min). Se habilita cuando estén listos Pacientes y Citas."
-    />
+    <Suspense fallback={<p className="text-slate-500">Cargando...</p>}>
+      <AgendarCita />
+    </Suspense>
   );
 }

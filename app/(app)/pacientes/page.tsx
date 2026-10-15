@@ -1,10 +1,5 @@
-import PaginaPendiente from "@/components/ui/PaginaPendiente";
+import PacientesPanel from "@/features/pacientes/PacientesPanel";
 
 export default function PacientesPage() {
-  return (
-    <PaginaPendiente
-      titulo="Pacientes"
-      descripcion="Se habilita cuando el backend publique el módulo de pacientes."
-    />
-  );
+  return <PacientesPanel />;
 }
