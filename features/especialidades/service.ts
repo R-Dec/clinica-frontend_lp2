@@ -1,28 +1,26 @@
 import type { ApiFn } from "@/lib/api";
 import type { Especialidad, EspecialidadForm } from "./types";
 
-/** El administrador ve todas; el agente solo las activas. */
 export function listarEspecialidades(api: ApiFn, soloActivas: boolean) {
-  return api<Especialidad[]>(
-    soloActivas ? "/especialidades/activas" : "/especialidades",
-  );
+	return api<Especialidad[]>(
+		soloActivas ? "/especialidades/activas" : "/especialidades",
+	);
 }
 
-/** id = null crea; con id actualiza. */
 export function guardarEspecialidad(
-  api: ApiFn,
-  id: number | null,
-  datos: EspecialidadForm,
+	api: ApiFn,
+	id: number | null,
+	datos: EspecialidadForm,
 ) {
-  return api<Especialidad>(
-    id === null ? "/especialidades" : `/especialidades/${id}`,
-    {
-      method: id === null ? "POST" : "PUT",
-      body: JSON.stringify(datos),
-    },
-  );
+	return api<Especialidad>(
+		id === null ? "/especialidades" : `/especialidades/${id}`,
+		{
+			method: id === null ? "POST" : "PUT",
+			body: JSON.stringify(datos),
+		},
+	);
 }
 
 export function alternarEstadoEspecialidad(api: ApiFn, id: number) {
-  return api<Especialidad>(`/especialidades/${id}/estado`, { method: "PATCH" });
+	return api<Especialidad>(`/especialidades/${id}/estado`, { method: "PATCH" });
 }
